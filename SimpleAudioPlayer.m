@@ -12,7 +12,7 @@
 
 @implementation SimpleAudioPlayer
 
-static SimpleAudioPlayer *sharedInstance = nil; 
+static SimpleAudioPlayer *sharedInstance = nil;
 
 + (void)initialize
 {
@@ -57,72 +57,6 @@ static SimpleAudioPlayer *sharedInstance = nil;
 }
 
 
-- (AVAudioPlayer *)playFile:(NSString *)name {
-	//TRC_DBG(@"playFile: %@ %d", name, [players count]);
-	
-	NSString *filePath = [[NSBundle mainBundle] pathForResource:name ofType:nil];
-	if(!filePath) {
-		return nil;
-	}	
-	
-	NSError *error = nil;
-	NSURL *fileURL = [NSURL fileURLWithPath:filePath isDirectory:NO];
-	AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&error];
-	
-	// Retain and play
-	if(player) {
-		[players addObject:player];
-		player.delegate = self;
-		[player play];
-		return player;
-	}
-	return nil;
-}
-- (AVAudioPlayer *) playFile:(NSString *)name withCompletionBlock:(CompletionBlock)completion
-{
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:name ofType:nil];
-	if(!filePath) {
-		return nil;
-	}
-	
-	NSError *error = nil;
-	NSURL *fileURL = [NSURL fileURLWithPath:filePath isDirectory:NO];
-	AVAudioPlayerWithCompletionBlock *player = [[AVAudioPlayerWithCompletionBlock alloc] initWithContentsOfURL:fileURL error:&error];
-	
-	// Retain and play
-	if(player) {
-		[players addObject:player];
-		player.delegate = self;
-        player.completionBlock = completion;
-		[player play];
-		return player;
-	}
-	return nil;
-
-}
-
-- (AVAudioPlayer *)playFile:(NSString *)name volume:(CGFloat)vol loops:(NSInteger)loops {
-	//TRC_DBG(@"playFile: %@ %d", name, [players count]);
-	
-	NSString *filePath = [[NSBundle mainBundle] pathForResource:name ofType:nil];
-	if(!filePath) {
-		return nil;
-	}	
-	
-	NSError *error = nil;
-	NSURL *fileURL = [NSURL fileURLWithPath:filePath isDirectory:NO];
-	AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&error];
-	player.volume = vol;
-	player.numberOfLoops = loops;
-	// Retain and play
-	if(player) {
-		[players addObject:player];
-		player.delegate = self;
-		[player play];
-		return player;
-	}
-	return nil;
-}
 - (AVAudioPlayer *) playFile:(NSString *)name volume:(CGFloat)vol loops:(NSInteger)loops withCompletionBlock:(CompletionBlock)completion
 {
     NSString *filePath = [[NSBundle mainBundle] pathForResource:name ofType:nil];
@@ -144,12 +78,26 @@ static SimpleAudioPlayer *sharedInstance = nil;
 		return player;
 	}
 	return nil;
+    
+}
 
+- (AVAudioPlayer *)playFile:(NSString *)name {
+    
+    return [self playFile:name volume:1.0f loops:1 withCompletionBlock:nil];
+}
+
+- (AVAudioPlayer *) playFile:(NSString *)name withCompletionBlock:(CompletionBlock)completion
+{
+    return [self playFile:name volume:1.0f loops:1 withCompletionBlock:completion];
+}
+
+- (AVAudioPlayer *)playFile:(NSString *)name volume:(CGFloat)vol loops:(NSInteger)loops {
+    
+	return [self playFile:name volume:vol loops:loops withCompletionBlock:nil];
 }
 
 
-
-- (void)stopPlayer:(AVAudioPlayer *)player {	
+- (void)stopPlayer:(AVAudioPlayer *)player {
 	if([players containsObject:player]) {
 		player.delegate = nil;
 		[players removeObject:player];
@@ -165,7 +113,7 @@ static SimpleAudioPlayer *sharedInstance = nil;
 }
 
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayerWithCompletionBlock *)player successfully:(BOOL)completed {
-	//TRC_DBG(@"audioPlayerDidFinishPlaying %d", (int)completed);
+    
 	if (player.completionBlock) {
         player.completionBlock ( completed );
     }
@@ -179,7 +127,7 @@ static SimpleAudioPlayer *sharedInstance = nil;
 	[players removeObject:player];
 }
 
-+ (AVAudioPlayer *)playFile:(NSString *)name {	
++ (AVAudioPlayer *)playFile:(NSString *)name {
 	return [[SimpleAudioPlayer shared] playFile:name];
 }
 
@@ -194,7 +142,7 @@ static SimpleAudioPlayer *sharedInstance = nil;
 {
     return [[SimpleAudioPlayer shared] playFile:name volume:vol loops:loops withCompletionBlock:completion];
 }
-+ (void)stopPlayer:(AVAudioPlayer *)player {	
++ (void)stopPlayer:(AVAudioPlayer *)player {
 	return [[SimpleAudioPlayer shared] stopPlayer:player];
 }
 + (void)stopAllPlayers {
