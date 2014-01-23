@@ -83,12 +83,12 @@ static SimpleAudioPlayer *sharedInstance = nil;
 
 - (AVAudioPlayer *)playFile:(NSString *)name {
     
-    return [self playFile:name volume:1.0f loops:1 withCompletionBlock:nil];
+    return [self playFile:name volume:1.0f loops:0 withCompletionBlock:nil];
 }
 
 - (AVAudioPlayer *) playFile:(NSString *)name withCompletionBlock:(CompletionBlock)completion
 {
-    return [self playFile:name volume:1.0f loops:1 withCompletionBlock:completion];
+    return [self playFile:name volume:1.0f loops:0 withCompletionBlock:completion];
 }
 
 - (AVAudioPlayer *)playFile:(NSString *)name volume:(CGFloat)vol loops:(NSInteger)loops {
