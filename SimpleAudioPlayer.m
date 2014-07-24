@@ -80,6 +80,27 @@ static SimpleAudioPlayer *sharedInstance = nil;
 	return nil;
     
 }
+- (void) playFiles:(NSArray*) filesList withCompletionBlock:(CompletionBlock) completion
+{
+    __block int idx = 0;
+    __block void(^playBlock)();
+    playBlock = ^() {
+        if (idx >= filesList.count) {
+            if (completion) {
+                completion ( YES );
+            }
+            playBlock = nil;
+            return ;
+        }
+        [self playFile:filesList[idx]
+   withCompletionBlock:^(BOOL completed) {
+       playBlock ();
+   }];
+        idx ++;
+    };
+    
+    playBlock ();
+}
 
 - (AVAudioPlayer *)playFile:(NSString *)name {
     
@@ -147,5 +168,9 @@ static SimpleAudioPlayer *sharedInstance = nil;
 }
 + (void)stopAllPlayers {
     return [[SimpleAudioPlayer shared] stopAllPlayers];
+}
++ (void) playFiles:(NSArray *)filesList withCompletionBlock:(CompletionBlock)completion
+{
+    [[SimpleAudioPlayer shared] playFiles:filesList withCompletionBlock:completion];
 }
 @end

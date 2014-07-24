@@ -41,6 +41,7 @@ typedef void(^CompletionBlock)(BOOL);
 
 + (void)stopPlayer:(AVAudioPlayer *)player;
 + (void)stopAllPlayers;
++ (void) playFiles:(NSArray *) filesList withCompletionBlock:(CompletionBlock) completion;
 
 
 @end
