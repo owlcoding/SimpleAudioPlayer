@@ -39,6 +39,8 @@ typedef void(^CompletionBlock)(BOOL);
 + (AVAudioPlayer *)playFile:(NSString *)name volume:(CGFloat)vol loops:(NSInteger)loops;
 + (AVAudioPlayer *) playFile:(NSString *)name withCompletionBlock:(CompletionBlock)completion ;
 
++ (AVAudioPlayer *) playLoopedFile:(NSString *) name;
+
 + (void)stopPlayer:(AVAudioPlayer *)player;
 + (void)stopAllPlayers;
 + (void) playFiles:(NSArray *) filesList withCompletionBlock:(CompletionBlock) completion;
