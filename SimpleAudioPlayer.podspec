@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "SimpleAudioPlayer"
-  s.version      = "0.1.2"
+  s.version      = "0.1.3"
   s.summary      = "Simple Audio Player is a simple wrapper for AVAudioplayer class."
   s.description  = <<-DESC
                     SimpleAudioPlayer
